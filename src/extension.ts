@@ -138,7 +138,8 @@ class BashConfigurationProvider implements vscode.DebugConfigurationProvider {
                 config.pathPkill = "pkill";
             }
         }
-
+        if (!config.sudo) { config.sudo = false }
+        if (!config.terminalKind) (config.terminalKind = "integrated")
         // These variables can be undefined, as indicated in `?` (optional type) in bashDebug.ts:LaunchRequestArguments
         // - config.showDebugOutput
         // - config.trace

@@ -1,7 +1,7 @@
 {
     "name": "bash-debug",
     "displayName": "Bash Debug",
-    "version": "0.3.9",
+    "version": "0.3.10",
     "publisher": "rogalmic",
     "description": "A debugger extension for bash scripts (using bashdb).",
     "author": {
@@ -67,7 +67,6 @@
         "standard-version": "^9.1.0",
         "ts-node": "^9.1.1",
         "typescript": "^4.1.5",
-        "vsce": "^1.85.0",
         "vscode-debugadapter-testsupport": "1.41.0"
     },
     "scripts": {
@@ -171,12 +170,17 @@
                                     "debugConsole"
                                 ],
                                 "description": "Can be set to 'integrated', 'external' or 'debugConsole'. Using 'integrated' or 'external' may require explicit terminal interpreter set for workspace.",
-                                "default": "debugConsole"
+                                "default": "integrated"
                             },
                             "env": {
                                 "type": "object",
                                 "description": "Environment variables defined as an object with key value pairs - {\"MYVAR\" : \"MY VALUE\"}.",
                                 "default": {}
+                            },
+                            "sudo": {
+                                "type": "boolean",
+                                "description": "Debug in sudo mode",
+                                "default": false
                             }
                         }
                     }
@@ -186,7 +190,8 @@
                         "type": "bashdb",
                         "request": "launch",
                         "name": "Bash-Debug (simplest configuration)",
-                        "program": "${file}"
+                        "program": "${file}",
+                        "sudo": false
                     }
                 ],
                 "configurationSnippets": [

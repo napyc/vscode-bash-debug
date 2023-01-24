@@ -150,6 +150,7 @@ _Dbg_parse_options() {
         tty_in       required_argument       \
         terminal_in  required_argument       \
         version      no_argument             \
+        user         required_argument       \
         '' "$@"
     do
         case "$opt" in
@@ -204,6 +205,9 @@ _Dbg_parse_options() {
                 ;;
             terminal_in | tty_in )
                 _Dbg_tty_in="$OPTLARG"
+                ;;
+            user )
+                _Sudo_user="$OPTLARG"
                 ;;
             x | eval-command )
                 DBG_INPUT=$OPTLARG      ;;

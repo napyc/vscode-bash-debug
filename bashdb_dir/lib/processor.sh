@@ -163,10 +163,19 @@ function _Dbg_process_commands {
             else
                 _Dbg_read_fn='read'
             fi
-            if ! $_Dbg_read_fn $_Dbg_edit -p "$_Dbg_prompt" _Dbg_cmd args \
-                <&$_Dbg_input_desc 2>>$_Dbg_prompt_output ; then
-                set +o history
-                break
+            if [ -z "$_Sudo_user" ]; then
+                if ! $_Dbg_read_fn $_Dbg_edit -p "$_Dbg_prompt" _Dbg_cmd args \
+                    <&$_Dbg_input_desc 2>>$_Dbg_prompt_output; then
+                    set +o history
+                    break
+                fi
+            else
+                if ! $_Dbg_read_fn $_Dbg_edit -p "$_Dbg_prompt" _Dbg_cmd args \
+                    <&$_Dbg_input_desc ; then
+                    # 2>>$_Dbg_prompt_output
+                    set +o history
+                    break
+                fi
             fi
         fi
 

@@ -149,12 +149,20 @@ export class BashDebugSession extends LoggingDebugSession {
         const envVars = Object.keys(this.launchArgs.env)
             .map(e => `export ${e}='${this.launchArgs.env[e]}';`)
             .reduce((prev, next) => prev + next, ``);
+        let command
+        if (args["sudo"]) {
+            command = this.joinCommands(
+                `${envVars}cd "${args.cwdEffective}"`,
+                `while [[ ! -p "${fifo_path}" ]]; do sleep 0.25; done`,
+                `"${args.pathBash}" -c "sudo ${args.pathBashdb} --quiet --user napyc --tty ${fifo_path} --tty_in ${fifo_path}_in --library ${args.pathBashdbLib} -- ${args.programEffective} ${quote(args.args)} ${args.argsString}"`);
 
-        const command = this.joinCommands(
-            `${envVars}cd "${args.cwdEffective}"`,
-            `while [[ ! -p "${fifo_path}" ]]; do sleep 0.25; done`,
-            `"${args.pathBash}" "${args.pathBashdb}" --quiet --tty "${fifo_path}" --tty_in "${fifo_path}_in" --library "${args.pathBashdbLib}" -- "${args.programEffective}" ${quote(args.args)} ${args.argsString}`);
+        } else {
+            command = this.joinCommands(
+                `${envVars}cd "${args.cwdEffective}"`,
+                `while [[ ! -p "${fifo_path}" ]]; do sleep 0.25; done`,
+                `"${args.pathBash}" "${args.pathBashdb}" --quiet --tty "${fifo_path}" --tty_in "${fifo_path}_in" --library "${args.pathBashdbLib}" -- "${args.programEffective}" ${quote(args.args)} ${args.argsString}`);
 
+        }
         if (this.launchArgs.terminalKind === "debugConsole" || this.launchArgs.terminalKind === undefined) {
             spawnBashScript(
                 command,

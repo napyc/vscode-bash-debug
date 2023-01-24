@@ -88,7 +88,12 @@ function _Dbg_msg {
     fi
     if (( ! _Dbg_logging_redirect )) ; then
         if [[ -n $_Dbg_tty  ]] && [[ $_Dbg_tty != '&1' ]] ; then
-            builtin echo -e "$@" >>$_Dbg_tty
+            # builtin echo -e "$@" >>$_Dbg_tty
+            if [ -z "$_Sudo_user" ]; then
+                builtin echo -e "$@" >>$_Dbg_tty
+            else
+                builtin echo -e "$@" | sudo -u $_Sudo_user tee -a "$_Dbg_tty" >/dev/null
+            fi
         else
             builtin echo -e "$@"
         fi
@@ -102,7 +107,12 @@ function _Dbg_msg_nocr {
     fi
     if (( ! _Dbg_logging_redirect )) ; then
         if [[ -n $_Dbg_tty  ]] ; then
-            builtin echo -n -e "$@" >>$_Dbg_tty
+            # builtin echo -n -e "$@" >>$_Dbg_tty
+            if [ -z "$_Sudo_user" ]; then
+                builtin echo -n -e "$@" >>$_Dbg_tty
+            else
+                builtin echo -n -e "$@" | sudo -u $_Sudo_user tee -a "$_Dbg_tty" >/dev/null
+            fi
         else
             builtin echo -n -e "$@"
         fi
